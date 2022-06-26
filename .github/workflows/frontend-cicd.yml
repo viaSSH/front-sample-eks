@@ -112,7 +112,7 @@ jobs:
         git config --global user.email "hanseung0609@github.com"
         git config --global user.name "viassh"
         git commit -am "Update image tag"
-        git push -u origin cicd-front
+        git push -u origin frontend
 
     # - name: Build, tag, and push image to Amazon ECR
     #   id: build-image
