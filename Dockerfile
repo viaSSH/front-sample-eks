@@ -1,4 +1,5 @@
-FROM node:12.16.2 as builder
+# FROM node:12.16.2 as builder
+FROM node:14.15.4 as builder
 
 # 작업 폴더를 만들고 npm 설치
 RUN mkdir /usr/src/app
