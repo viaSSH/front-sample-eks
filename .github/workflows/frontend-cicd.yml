@@ -75,6 +75,45 @@ jobs:
         tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
 
 
+    - name: Get verion
+      id: image
+      run: |
+        VERSION=$(echo ${{ github.sha }} | cut -c1-8)
+        echo VERSION=$VERSION
+        echo "::set-output name=version::$VERSION"
+
+    # kustomize 명령을 가져온다.
+    - name: Setup Kustomize
+      uses: imranismail/setup-kustomize@v1
+
+    - name: Checkout kustomize repository
+      uses: actions/checkout@v2
+      with:
+        # kubernetes 설정정보 저장소
+        repository: viaSSH/cicd-gitops-eks
+        ref: cicd-front
+        # 다른 저장소에 push 하려면 Personal Access Token이 필요.
+        token: ${{ secrets.ACTION_TOKEN }}
+        path: cicd-gitops-eks
+    # 새 이미지 버전으로 파일 수정
+    - name: Update Kubernetes resources
+      run: |
+        pwd
+        cd cicd-gitops-eks/overlays/prd/
+        echo \${{ steps.login-ecr.outputs.registry }}/\${{ env.ECR_REPOSITORY }}
+        echo \${{ steps.login-ecr.outputs.registry }}/\${{ env.ECR_REPOSITORY }}:\${{ github.sha }}
+        kustomize edit set image \${{ steps.login-ecr.outputs.registry }}/\${{ env.ECR_REPOSITORY }}=\${{ steps.login-ecr.outputs.registry }}/\${{ env.ECR_REPOSITORY }}:\${{ github.sha }}
+        cat kustomization.yaml
+
+    # 수정된 파일 commit & push
+    - name: Commit minifest files
+      run: |
+        cd cicd-gitops-eks
+        git config --global user.email "hanseung0609@github.com"
+        git config --global user.name "viassh"
+        git commit -am "Update image tag"
+        git push -u origin cicd-front
+
     # - name: Build, tag, and push image to Amazon ECR
     #   id: build-image
     #   env:
