@@ -51,6 +51,9 @@ jobs:
     # AWS_SECRET_ACCESS_KEY: ***
     # ***.dkr.ecr.ap-northeast-2.amazonaws.com 의 ***도 마찬가지
 
+    - name: Set up Docker buildx
+      user: docker/setup-buildx-action@v1
+
     # Dockerfile 을 기준으로 이미지 빌드 후 ecr로 push
     - name: Docker Build and ECR Push
       id: docker_build
