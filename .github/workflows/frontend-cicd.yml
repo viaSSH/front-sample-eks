@@ -69,10 +69,10 @@ jobs:
     # # kustomize 명령을 가져온다.
     # - name: Setup Kustomize
     #   uses: imranismail/setup-kustomize@v1
-    - name: Run Kubernetes tools
-      uses: stefanprodan/kube-tools@v1
-      with:
-          kustomize: 4.4.1
+    # - name: Run Kubernetes tools
+    #   uses: stefanprodan/kube-tools@v1
+    #   with:
+    #       kustomize: 4.4.1
 
     - name: Checkout kustomize repository
       uses: actions/checkout@v2
